@@ -6,7 +6,7 @@ Author: Bjornar Egede-Nissen (C)
 
 License: MIT
 
-Created in C# (.NET 7.0)
+Created in C# (.NET 6.0)
 
 ---
 
