@@ -88,5 +88,15 @@ namespace ExplorerNav
         {
             Main.ShowBrowseDirectory();
         }
+
+        private void btnExport_Click(object sender, RoutedEventArgs e)
+        {
+            Main.Export();
+        }
+
+        private void btnImport_Click(object sender, RoutedEventArgs e)
+        {
+            Main.Import();
+        }
     }
 }
