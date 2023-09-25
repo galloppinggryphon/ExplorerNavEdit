@@ -1,5 +1,7 @@
-﻿using System.Collections.ObjectModel;
+﻿using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.Linq;
 
 namespace ExplorerNav.Models
 {
@@ -20,7 +22,13 @@ namespace ExplorerNav.Models
             {
                 _items = value;
                 this.OnPropertyChanged(nameof(Items));
+                OnPropertyChanged(nameof(HasItems));
             }
+        }
+
+        public bool HasItems
+        {
+            get => Items.Count > 0;
         }
 
         public NavItemList()
@@ -31,11 +39,24 @@ namespace ExplorerNav.Models
         public void Add(NavItem item)
         {
             Items.Add(item);
+            OnPropertyChanged(nameof(HasItems));
+        }
+
+        public void Add(NavItem.ItemData itemData)
+        {
+            Items.Add(new NavItem(itemData));
+            OnPropertyChanged(nameof(HasItems));
         }
 
         public void Remove(NavItem item)
         {
             Items.Remove(item);
+            OnPropertyChanged(nameof(HasItems));
+        }
+
+        public List<NavItem.ItemData> Export()
+        {
+            return Items.Select(item => item.Export()).ToList();
         }
     }
 }

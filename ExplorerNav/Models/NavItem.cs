@@ -28,11 +28,28 @@ namespace ExplorerNav.Models
 
         static private readonly NavItemKeys[] _keys = { NavItemKeys.Uid, NavItemKeys.Title, NavItemKeys.Icon, NavItemKeys.Path };
 
+        [Serializable]
+        public struct ItemData
+        {
+            public string Title { get; set; }
+            public string Uid { get; set; }
+            public string Path { get; set; }
+            public string Icon { get; set; }
+            public bool IsBuiltIn { get; set; }
+            public ItemData(string uid, string title, string path, string icon, bool isBuiltIn)
+            {
+                this.Uid = uid;
+                this.Title = title;
+                this.Path = path;
+                this.Icon = icon;
+                this.IsBuiltIn = isBuiltIn;
+            }
+        };
+
         private string _title;
         private string _uid;
         private string _path;
         private string _icon;
-
         public NavItemState State { get; } = new(_keys);
 
         public string Title
@@ -122,6 +139,27 @@ namespace ExplorerNav.Models
             State.Fields.Start();
 
             State.RefreshStatus();
+        }
+
+        public NavItem(ItemData itemData, bool isBuiltIn = false, bool isApplied = false)
+        {
+            Title = itemData.Title;
+            Path = itemData.Path;
+            Icon = itemData.Icon;
+            Uid = itemData.Uid;
+
+            State.SetType(isBuiltIn);
+            State.SetApplied(isApplied);
+
+            State.Fields.Refresh(ValuesAsArray());
+            State.Fields.Start();
+
+            State.RefreshStatus();
+        }
+
+        public ItemData Export()
+        {
+            return new(this.Uid, this.Title, this.Path, this.Icon, this.State.IsBuiltIn);
         }
 
         public void NewUID()
