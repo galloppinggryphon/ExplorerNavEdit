@@ -9,7 +9,7 @@
 	  <ApplicationIcon>#10.ico</ApplicationIcon>
 	  <Copyright>Bjornar Egede-Nissen</Copyright>
 	  <AssemblyVersion></AssemblyVersion>
-	  <Version>0.9.0</Version>
+	  <Version>0.9.1</Version>
   </PropertyGroup>
 
   <ItemGroup>
