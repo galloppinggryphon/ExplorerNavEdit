@@ -1,5 +1,6 @@
 ﻿using ExplorerNav.Models;
 using ExplorerNav.Services;
+using System.Collections.Generic;
 using System.ComponentModel;
 
 namespace ExplorerNav.ViewModels
@@ -10,6 +11,7 @@ namespace ExplorerNav.ViewModels
         public void OnPropertyChanged(string propertyName) => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
 
         private readonly DialogueService dialogueService = new();
+        private readonly JsonUtil jsonUtil = new();
         private readonly NavEdit editor = new();
 
         private NavItemList _navList = new();
@@ -25,6 +27,7 @@ namespace ExplorerNav.ViewModels
                 OnPropertyChanged(nameof(IsEditorEnabled));
             }
         }
+
 
         public NavItemList NavList
         {
@@ -129,6 +132,69 @@ namespace ExplorerNav.ViewModels
             if (path != null)
             {
                 CurrentItem.Path = path;
+            }
+        }
+
+        public void ExportCurrent()
+        {
+            string filename = dialogueService.ShowSaveFile(null, null, "JSON|*.json");
+
+            if (filename != null)
+            {
+                var item = CurrentItem.Export();
+                bool result = jsonUtil.WriteToFile(item, filename, true);
+
+                if (result)
+                {
+                    dialogueService.ShowInfo("Export complete", $"The item has been exported to '{filename}'.");
+                }
+                else
+                {
+                    dialogueService.ShowInfo("Export failed!", $"Something went wrong - could not export the to '{filename}'.\n\nError:\n{jsonUtil.ErrorMessage}");
+                }
+            }
+        }
+
+        public void Export()
+        {
+            string filename = dialogueService.ShowSaveFile(null, null, "JSON|*.json");
+
+            if (filename != null)
+            {
+                List<NavItem.ItemData> items = NavList.Export();
+
+                bool result = jsonUtil.WriteToFile(items, filename, true);
+
+                if (result)
+                {
+                    dialogueService.ShowInfo("Export complete", $"All items have been exported to '{filename}'.");
+                }
+                else
+                {
+                    dialogueService.ShowInfo("Export failed!", $"Something went wrong - could not export items to '{filename}'.\n\nError:\n{jsonUtil.ErrorMessage}");
+                }
+            }
+        }
+
+        public void Import()
+        {
+            string filename = dialogueService.ShowSaveFile(null, null, "JSON|*.json");
+
+            if (filename != null)
+            {
+                var jsonData = jsonUtil.ReadFromFile<NavItem.ItemData[]>(filename);
+
+                if (jsonData == default)
+                {
+                    dialogueService.ShowInfo("Import failed!", $"Something went wrong - could not import data from '{filename}'.\n\nError:\n{jsonUtil.ErrorMessage}");
+                }
+                else
+                {
+                    foreach (var item in jsonData)
+                    {
+                        NavList.Add(item);
+                    }
+                }
             }
         }
 
