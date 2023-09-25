@@ -1,4 +1,7 @@
 ﻿using System.Windows;
+using WinForm = System.Windows.Forms;
+using WpfForm = Microsoft.Win32;
+
 
 namespace ExplorerNav.Services
 {
@@ -9,6 +12,7 @@ namespace ExplorerNav.Services
         void ShowError(string title, string message);
         bool AskYesNo(string title, string message, bool shouldWarn = false);
         public string? ShowDirectoryBrowse(string directoryPath);
+        public string? ShowSaveFile(string? fileName = "", string? path = "", string? filter = "");
     }
 
     internal class DialogueService : IDialogueService
@@ -32,19 +36,66 @@ namespace ExplorerNav.Services
             return result == MessageBoxResult.Yes;
         }
 
+        public string? ShowSaveFile(string? fileName = "", string? path = "", string? filter = "")
+        {
+            var dialogue = NewSaveFileDialogue(filter);
+
+            if (fileName != null) dialogue.FileName = fileName;
+            if (path != null) dialogue.InitialDirectory = path;
+
+            if (dialogue.ShowDialog() == true)
+            {
+                return dialogue.FileName;
+            }
+
+            return null;
+        }
+
+        public string? ShowOpenFile(string? fileName = "", string? path = "", string? filter = "")
+        {
+            var dialogue = new WpfForm.OpenFileDialog(); //NewSaveFileDialogue(filter);
+
+            //WpfForm.OpenFileDialog dialogue = new();
+            dialogue.Filter = filter ?? ""; // "Text file (*.txt)|*.txt|C# file (*.cs)|*.cs";
+
+            if (fileName != null) dialogue.FileName = fileName;
+            if (path != null) dialogue.InitialDirectory = path;
+
+            if (dialogue.ShowDialog() == true)
+            {
+                return dialogue.FileName;
+            }
+
+            return null;
+        }
+
         public string? ShowDirectoryBrowse(string directoryPath)
         {
             //Note: requires <UseWindowsForms>true</UseWindowsForms> in .csproj
-            using (System.Windows.Forms.FolderBrowserDialog folderDialog = new System.Windows.Forms.FolderBrowserDialog())
+            using (WinForm.FolderBrowserDialog folderDialog = new())
             {
                 folderDialog.SelectedPath = directoryPath;
 
-                System.Windows.Forms.DialogResult result = folderDialog.ShowDialog();
+                WinForm.DialogResult result = folderDialog.ShowDialog();
                 if (result.ToString() == "OK")
                     return folderDialog.SelectedPath;
 
                 return null;
             }
+        }
+
+        private WpfForm.SaveFileDialog NewSaveFileDialogue(string filter)
+        {
+            WpfForm.SaveFileDialog dialogue = new();
+            dialogue.Filter = filter ?? "";
+            return dialogue;
+        }
+
+        private WpfForm.OpenFileDialog NewOpenFileDialogue(string filter)
+        {
+            WpfForm.OpenFileDialog dialogue = new();
+            dialogue.Filter = filter ?? "";
+            return dialogue;
         }
     }
 }
