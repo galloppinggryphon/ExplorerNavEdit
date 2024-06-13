@@ -57,10 +57,10 @@ namespace ExplorerNav.Models
     internal class NavItemState : INotifyPropertyChanged
     {
         internal record struct StatusData(
-            Dictionary<string, int> data
+            Dictionary<string, int> Data
         );
 
-        public event PropertyChangedEventHandler PropertyChanged;
+        public event PropertyChangedEventHandler? PropertyChanged;
         public void OnPropertyChanged(string propertyName) => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
 
         public StateTracker<NavItemKeys> Fields { get; private set; }
@@ -116,7 +116,7 @@ namespace ExplorerNav.Models
 
                 return new()
                 {
-                    data = data,
+                    Data = data,
                 };
             }
         }
@@ -156,15 +156,18 @@ namespace ExplorerNav.Models
         {
             get => AppliedStatus == AppliedEnum.Applied;
         }
+        public bool IsNotApplied
+        {
+            get => AppliedStatus != AppliedEnum.Applied;
+        }
 
         public bool IsSaved
         {
             get => SavedStatus == SavedEnum.Saved;
         }
-
-        public bool IsUnsaved
+        public bool IsNotSaved
         {
-            get => SavedStatus == SavedEnum.Unsaved;
+            get => SavedStatus != SavedEnum.Saved;
         }
 
         public NavItemState(NavItemKeys[] _keys)
@@ -213,6 +216,7 @@ namespace ExplorerNav.Models
         {
             OnPropertyChanged(nameof(AppliedStatus));
             OnPropertyChanged(nameof(IsApplied));
+            OnPropertyChanged(nameof(IsNotApplied));
             OnPropertyChanged(nameof(Status));
         }
 
@@ -220,7 +224,7 @@ namespace ExplorerNav.Models
         {
             OnPropertyChanged(nameof(SavedStatus));
             OnPropertyChanged(nameof(IsSaved));
-            OnPropertyChanged(nameof(IsUnsaved));
+            OnPropertyChanged(nameof(IsNotSaved));
             OnPropertyChanged(nameof(Status));
         }
     }

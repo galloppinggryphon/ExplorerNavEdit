@@ -44,57 +44,57 @@ namespace ExplorerNav
             }
         }
 
-        private void btnSekectIcon_Click(object sender, RoutedEventArgs e)
+        private void BtnSelectIcon_Click(object sender, RoutedEventArgs e)
         {
             ShowIconPicker(Main.CurrentItem.Icon);
         }
 
-        private void btnResetIconPicker_Click(object sender, RoutedEventArgs e)
+        private void BtnResetIconPicker_Click(object sender, RoutedEventArgs e)
         {
             Main.SetCurrentItemIcon();
         }
 
-        private void btnLoadFromRegistry_Click(object sender, RoutedEventArgs e)
+        private void BtnLoadFromRegistry_Click(object sender, RoutedEventArgs e)
         {
             Main.ReadNavItemsFromRegistry();
         }
 
-        private void btnNewItem_Click(object sender, RoutedEventArgs e)
+        private void BtnNewItem_Click(object sender, RoutedEventArgs e)
         {
             Main.NewItem();
         }
 
-        private void btnRemove_Click(object sender, RoutedEventArgs e)
+        private void BtnRemove_Click(object sender, RoutedEventArgs e)
         {
             Main.RemoveCurrentItem();
         }
 
-        private void btnUnregister_Click(object sender, RoutedEventArgs e)
+        private void BtnUnregister_Click(object sender, RoutedEventArgs e)
         {
             Main.UnregisterNavItem();
         }
 
-        private void btnRegister_Click(object sender, RoutedEventArgs e)
+        private void BtnRegister_Click(object sender, RoutedEventArgs e)
         {
             Main.RegisterNavItem();
         }
 
-        private void btnAbout_Click(object sender, RoutedEventArgs e)
+        private void BtnAbout_Click(object sender, RoutedEventArgs e)
         {
             Main.ShowAboutWindow();
         }
 
-        private void btnBrowse_Click(object sender, RoutedEventArgs e)
+        private void BtnBrowse_Click(object sender, RoutedEventArgs e)
         {
             Main.ShowBrowseDirectory();
         }
 
-        private void btnExport_Click(object sender, RoutedEventArgs e)
+        private void BtnExport_Click(object sender, RoutedEventArgs e)
         {
             Main.Export();
         }
 
-        private void btnImport_Click(object sender, RoutedEventArgs e)
+        private void BtnImport_Click(object sender, RoutedEventArgs e)
         {
             Main.Import();
         }

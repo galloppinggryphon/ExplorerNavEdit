@@ -12,7 +12,7 @@ namespace ExplorerNav.Converters
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
             var states = (NavItemState.StatusData)value;
-            var data = states.data;
+            var data = states.Data;
             var applied = (AllStatesEnum)data["applied"];
             var saved = (AllStatesEnum)data["saved"];
             var error = (ErrorEnum)data["error"];
@@ -32,7 +32,7 @@ namespace ExplorerNav.Converters
             return new SolidColorBrush(colour);
         }
 
-        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+        public object? ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
         {
             return null;
         }

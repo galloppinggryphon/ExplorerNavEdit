@@ -1,20 +1,20 @@
 # Explorer Navigation Editor
 
-Version: 0.9.0
+Version: 1.0.0
 
 Author: Bjornar Egede-Nissen (C)
 
 License: MIT
 
-Created in C# (.NET 6.0)
+Created in C# (.NET 7.0)
 
 ---
 
-Edit items in the Windows Explorer navigation bar. These items can be expanded like normal folders, unlike shortcuts in the Quick Access section.
+Edit items in the Windows Explorer navigation bar (sidebar). These items can be expanded like normal folders, unlike shortcuts in the Quick Access section.
 
 
 
-![Application screenshot](app_screenshot.png)
+![Application screenshot](explorernavedit_screenshot.png)
 ![Windows explorer screenshot](explorer_screenshot.png)
 
 ## How it works

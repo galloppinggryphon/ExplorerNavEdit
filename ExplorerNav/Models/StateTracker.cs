@@ -3,12 +3,12 @@ using System.ComponentModel;
 
 namespace ExplorerNav.Models
 {
-    class StateTracker<Keys> : INotifyPropertyChanged
+    class StateTracker<Keys> : INotifyPropertyChanged where Keys : notnull
     {
-        public event PropertyChangedEventHandler PropertyChanged;
+        public event PropertyChangedEventHandler? PropertyChanged;
         public void OnPropertyChanged(string propertyName) => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
 
-        private Dictionary<Keys, string> _originalValues = new();
+        private readonly Dictionary<Keys, string> _originalValues = new();
         private HashSet<Keys> _dirtyKeys = new();
         private bool _someKeysDirty;
 

@@ -23,7 +23,7 @@ namespace ExplorerNav.Models
 
     internal class NavItem : INavItem, INotifyPropertyChanged
     {
-        public event PropertyChangedEventHandler PropertyChanged;
+        public event PropertyChangedEventHandler? PropertyChanged;
         public void OnPropertyChanged(string propertyName) => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
 
         static private readonly NavItemKeys[] _keys = { NavItemKeys.Uid, NavItemKeys.Title, NavItemKeys.Icon, NavItemKeys.Path };
@@ -46,10 +46,10 @@ namespace ExplorerNav.Models
             }
         };
 
-        private string _title;
-        private string _uid;
-        private string _path;
-        private string _icon;
+        private string _title = "";
+        private string _uid = "";
+        private string _path = "";
+        private string _icon = "";
         public NavItemState State { get; } = new(_keys);
 
         public string Title

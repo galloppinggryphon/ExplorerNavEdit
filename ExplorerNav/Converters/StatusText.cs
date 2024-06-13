@@ -30,12 +30,12 @@ namespace ExplorerNav.Converters
         {
             var states = (NavItemState.StatusData)value;
             var param = (string)parameter;
-            var state = (AllStatesEnum)states.data[param];
+            var state = (AllStatesEnum)states.Data[param];
 
             return statusTexts[state];
         }
 
-        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+        public object? ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
         {
             return null;
         }

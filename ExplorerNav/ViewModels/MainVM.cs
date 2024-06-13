@@ -7,7 +7,7 @@ namespace ExplorerNav.ViewModels
 {
     internal class MainVM : INotifyPropertyChanged
     {
-        public event PropertyChangedEventHandler PropertyChanged;
+        public event PropertyChangedEventHandler? PropertyChanged;
         public void OnPropertyChanged(string propertyName) => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
 
         private readonly DialogueService dialogueService = new();
@@ -15,7 +15,7 @@ namespace ExplorerNav.ViewModels
         private readonly NavEdit editor = new();
 
         private NavItemList _navList = new();
-        private NavItem _currentItem;
+        private NavItem? _currentItem;
         private bool _isEditorEnabled = false;
 
         public bool IsEditorEnabled
@@ -39,20 +39,21 @@ namespace ExplorerNav.ViewModels
             }
         }
 
-        public NavItem CurrentItem
+        public NavItem? CurrentItem
         {
             get => _currentItem;
             set
             {
                 _currentItem = value;
                 OnPropertyChanged(nameof(CurrentItem));
-                IsEditorEnabled = value != null;
+                IsEditorEnabled = value is not null;
             }
         }
 
         public MainVM()
         {
             NavList = new();
+            ReadNavItemsFromRegistry();
         }
 
         public void ReadNavItemsFromRegistry()
@@ -63,7 +64,7 @@ namespace ExplorerNav.ViewModels
 
         public void RegisterNavItem()
         {
-            var errors = CurrentItem.Validate();
+            var errors = CurrentItem!.Validate();
 
             if (errors == null)
             {
@@ -71,7 +72,6 @@ namespace ExplorerNav.ViewModels
 
                 CurrentItem.State.SetApplied(true);
                 CurrentItem.State.SetSaved(true);
-
                 CurrentItem.OnSaved();
 
                 dialogueService.ShowInfo("Applied to registry", "The navigation item has been saved to the registry.\n\nYou may have to stop and restart explorer.exe from the task manager before it will work.");
@@ -85,7 +85,7 @@ namespace ExplorerNav.ViewModels
 
         public void UnregisterNavItem()
         {
-            if (CurrentItem.State.IsApplied)
+            if (CurrentItem!.State.IsApplied)
             {
                 if (!dialogueService.AskYesNo("Unregister item?", $"Are you sure you want to remove '{CurrentItem.Title}' from the Windows registry?")) return;
 
@@ -102,22 +102,23 @@ namespace ExplorerNav.ViewModels
             SetCurrentItemIcon();
             CurrentItem.State.SetSaved(true);
             CurrentItem.State.SetApplied(false);
-            NavList.Add(CurrentItem);
+            NavList.Add(CurrentItem, true);
         }
 
         public void RemoveCurrentItem()
         {
-            NavList.Remove(CurrentItem);
+            if (CurrentItem is not null)
+                NavList.Remove(CurrentItem);
         }
 
         public void SetCurrentItemIcon()
         {
-            CurrentItem.SetIcon(IconPicker.DefaultIconfile + ",0");
+            CurrentItem!.SetIcon(IconPicker.DefaultIconfile + ",0");
         }
 
         public void SetCurrentItemIcon(IconPicker.IconData icon)
         {
-            CurrentItem.SetIcon(icon.ToString());
+            CurrentItem!.SetIcon(icon.ToString());
         }
 
         public void EditorEnable()
@@ -127,21 +128,21 @@ namespace ExplorerNav.ViewModels
 
         public void ShowBrowseDirectory()
         {
-            string? path = dialogueService.ShowDirectoryBrowse(CurrentItem.Path);
+            string? path = dialogueService.ShowDirectoryBrowse(CurrentItem!.Path);
 
-            if (path != null)
+            if (path is not null)
             {
-                CurrentItem.Path = path;
+                CurrentItem!.Path = path;
             }
         }
 
         public void ExportCurrent()
         {
-            string filename = dialogueService.ShowSaveFile(null, null, "JSON|*.json");
+            string? filename = dialogueService.ShowSaveFile(null, null, "JSON|*.json");
 
-            if (filename != null)
+            if (filename is not null)
             {
-                var item = CurrentItem.Export();
+                var item = CurrentItem!.Export();
                 bool result = jsonUtil.WriteToFile(item, filename, true);
 
                 if (result)
@@ -157,9 +158,9 @@ namespace ExplorerNav.ViewModels
 
         public void Export()
         {
-            string filename = dialogueService.ShowSaveFile(null, null, "JSON|*.json");
+            string? filename = dialogueService.ShowSaveFile(null, null, "JSON|*.json");
 
-            if (filename != null)
+            if (filename is not null)
             {
                 List<NavItem.ItemData> items = NavList.Export();
 
@@ -178,9 +179,9 @@ namespace ExplorerNav.ViewModels
 
         public void Import()
         {
-            string filename = dialogueService.ShowSaveFile(null, null, "JSON|*.json");
+            string? filename = dialogueService.ShowSaveFile(null, null, "JSON|*.json");
 
-            if (filename != null)
+            if (filename is not null)
             {
                 var jsonData = jsonUtil.ReadFromFile<NavItem.ItemData[]>(filename);
 
@@ -190,6 +191,7 @@ namespace ExplorerNav.ViewModels
                 }
                 else
                 {
+                    NavList.RemoveAll();
                     foreach (var item in jsonData)
                     {
                         NavList.Add(item);
@@ -200,7 +202,7 @@ namespace ExplorerNav.ViewModels
 
         public void ShowAboutWindow()
         {
-            dialogueService.ShowInfo("About Explorer Navigation Editor", "Explorer Navigation Editor\n(C) Bjornar Egede-Nissen, 2023\nLicense: MIT");
+            dialogueService.ShowInfo("About Explorer Navigation Editor", "Explorer Navigation Editor\n(C) Bjornar Egede-Nissen, 2023-2024\nLicense: MIT");
         }
     }
 }

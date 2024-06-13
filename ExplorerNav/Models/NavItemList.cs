@@ -7,7 +7,7 @@ namespace ExplorerNav.Models
 {
     internal class NavItemList : INotifyPropertyChanged
     {
-        public event PropertyChangedEventHandler PropertyChanged;
+        public event PropertyChangedEventHandler? PropertyChanged;
         public void OnPropertyChanged(string propertyName) => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
 
         private ObservableCollection<NavItem> _items = new();
@@ -36,14 +36,23 @@ namespace ExplorerNav.Models
             Items = new();
         }
 
-        public void Add(NavItem item)
+        public void Add(NavItem item, bool insertFirst = false)
         {
-            Items.Add(item);
+            if (insertFirst)
+            {
+                Items.Insert(0, item);
+            }
+            else
+            {
+                Items.Add(item);
+            }
+
             OnPropertyChanged(nameof(HasItems));
         }
 
         public void Add(NavItem.ItemData itemData)
         {
+            //Items.Prepend
             Items.Add(new NavItem(itemData));
             OnPropertyChanged(nameof(HasItems));
         }
@@ -52,6 +61,11 @@ namespace ExplorerNav.Models
         {
             Items.Remove(item);
             OnPropertyChanged(nameof(HasItems));
+        }
+
+        public void RemoveAll()
+        {
+            Items.Clear();
         }
 
         public List<NavItem.ItemData> Export()
