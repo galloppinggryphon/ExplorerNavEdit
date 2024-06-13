@@ -24,8 +24,7 @@ Navigation items are defined in the Registry. They can be added or removed manua
 * [C-Files_enable.reg](C-Files_enable.reg)
 * [C-Files_disable.reg](C-Files_disable.reg)
 
-## To do
 
-* Export to JSON
-* Import from JSON
-* Item position
+## Licence
+
+MIT
